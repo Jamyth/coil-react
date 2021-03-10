@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "module": "es2020",
+        "target": "es5",
+        "outDir": "../dist",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "inlineSources": true,
+        "declaration": true,
+        "strict": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "importHelpers": true,
+        "jsx": "react",
+        "lib": ["dom", "es2020"],
+        "forceConsistentCasingInFileNames": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "downlevelIteration": true
+    },
+    "include": ["../src"]
+}

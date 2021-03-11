@@ -46,7 +46,7 @@ function commit() {
 
 function push() {
     console.info(chalk`{green.bold [task]} {white.bold push to github}`);
-    spawn("git", ["pull", "rebase", "--autostash"], "cannot pull changes from upstream");
+    spawn("git", ["pull", "--rebase", "--autostash"], "cannot pull changes from upstream");
     return spawn("git", ["push", "-u", "origin", "master"], "cannot push to github");
 }
 

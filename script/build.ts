@@ -1,11 +1,8 @@
-/* eslint-env node */
-/* eslint-disable @typescript-eslint/no-var-requires */
+import chalk from "chalk";
+import {spawnSync} from "child_process";
+import yargs from "yargs";
 
-const chalk = require("chalk");
-const {spawnSync} = require("child_process");
-const yargs = require("yargs");
-
-function spawn(command, args, errorMessage) {
+function spawn(command: string, args: string[], errorMessage: string) {
     const isWindows = process.platform === "win32";
     const result = spawnSync(isWindows ? command + ".cmd" : command, args, {stdio: "inherit"});
     if (result.error) {

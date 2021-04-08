@@ -1,9 +1,9 @@
 import React from "react";
 import {useLocation, useParams} from "react-router";
 import {usePrevious} from "./hooks";
-import {DefaultAction} from "./type";
+import type {DefaultAction} from "./type";
 
-export function injectLifeCycle<RouteParam = {}, HistoryState = {}>(Component: React.ComponentType<any>, useActions: () => DefaultAction<RouteParam, HistoryState>) {
+export function injectLifeCycle<RouteParam = object, HistoryState = object>(Component: React.ComponentType<any>, useActions: () => DefaultAction<RouteParam, HistoryState>) {
     return React.memo(() => {
         const location = useLocation<HistoryState>();
         const routeParam = useParams<RouteParam>();
@@ -13,12 +13,14 @@ export function injectLifeCycle<RouteParam = {}, HistoryState = {}>(Component: R
         React.useEffect(() => {
             onMount?.();
             onRouteMatched?.(routeParam, location);
+            // eslint-disable-next-line react-hooks/exhaustive-deps -- Did mount call
         }, []);
 
         React.useEffect(() => {
             if (previousLocation && location && previousLocation !== location) {
                 onRouteMatched?.(routeParam, location);
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps -- only track the location
         }, [location]);
 
         return Component ? <Component /> : null;

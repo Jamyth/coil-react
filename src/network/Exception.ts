@@ -14,8 +14,4 @@ export class NetworkConnectionException extends Exception {
     }
 }
 
-export class JavaScriptException extends Exception {
-    constructor(message: string) {
-        super(message);
-    }
-}
+export class JavaScriptException extends Exception {}

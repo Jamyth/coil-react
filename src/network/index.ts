@@ -1,7 +1,8 @@
-import axios, {AxiosError, AxiosRequestConfig, Method} from "axios";
+import type {AxiosError, AxiosRequestConfig, Method} from "axios";
+import axios from "axios";
 import {APIException, NetworkConnectionException} from "./Exception";
 
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-unused-vars -- type inference */
 // prettier-ignore
 export type PathParams<T extends string> = string extends T
   ? { [key: string]: string | number }
@@ -9,13 +10,14 @@ export type PathParams<T extends string> = string extends T
   ? { [k in Param | keyof PathParams<Rest>]: string | number }
   : T extends `${infer _Start}:${infer Param}`
   ? { [k in Param]: string | number }
-  : {};
+  : object;
 /* eslint-enable */
 
 axios.interceptors.response.use(
     (response) => response,
+    // eslint-disable-next-line sonarjs/cognitive-complexity -- well commented
     (e) => {
-        // eslint-disable-next-line no-prototype-builtins
+        // eslint-disable-next-line no-prototype-builtins -- builtins check is necessary
         if (e && typeof e === "object" && e.hasOwnProperty("isAxiosError")) {
             const error = e as AxiosError;
             const requestURL = error.config.url || "-";

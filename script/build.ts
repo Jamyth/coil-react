@@ -2,7 +2,7 @@ import chalk from "chalk";
 import {spawnSync} from "child_process";
 import yargs from "yargs";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const {version} = require("../package.json");
+// const {version} = require("../package.json");
 
 function spawn(command: string, args: string[], errorMessage: string) {
     const isWindows = process.platform === "win32";
@@ -35,20 +35,20 @@ function cleanup() {
 
 function compile() {
     console.info(chalk`{green.bold [task]} {white.bold compile}`);
-    return spawn("tsc", ["-p", "config/tsconfig.json"], "compile failed, please fix");
+    return spawn("tsc", ["-p", "config/tsconfig.src.json"], "compile failed, please fix");
 }
 
-function commit() {
-    console.info(chalk`{green.bold [task]} {white.bold commit to git}`);
-    spawn("git", ["add", "."], "cannot add changes to git tree");
-    return spawn("git", ["commit", "-m", `[SYSTEM]: ${version}: build package`], "cannot commit changes");
-}
+// function commit() {
+//     console.info(chalk`{green.bold [task]} {white.bold commit to git}`);
+//     spawn("git", ["add", "."], "cannot add changes to git tree");
+//     return spawn("git", ["commit", "-m", `[SYSTEM]: ${version}: build package`], "cannot commit changes");
+// }
 
-function push() {
-    console.info(chalk`{green.bold [task]} {white.bold push to github}`);
-    spawn("git", ["pull", "--rebase", "--autostash"], "cannot pull changes from upstream");
-    return spawn("git", ["push", "-u", "origin", "master"], "cannot push to github");
-}
+// function push() {
+//     console.info(chalk`{green.bold [task]} {white.bold push to github}`);
+//     spawn("git", ["pull", "--rebase", "--autostash"], "cannot pull changes from upstream");
+//     return spawn("git", ["push", "-u", "origin", "master"], "cannot push to github");
+// }
 
 function build() {
     const isFastMode = yargs.argv.mode === "fast";
@@ -60,8 +60,8 @@ function build() {
 
     cleanup();
     compile();
-    commit();
-    push();
+    // commit();
+    // push();
 }
 
 build();

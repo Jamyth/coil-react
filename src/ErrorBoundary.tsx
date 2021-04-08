@@ -6,13 +6,19 @@ interface Props {
 }
 
 export const ErrorBoundary = React.memo(({children, onError}: Props) => {
-    const onUnhandleRejection = (e: PromiseRejectionEvent) => {
-        onError(e.reason);
-    };
+    const onUnhandleRejection = React.useCallback(
+        (e: PromiseRejectionEvent) => {
+            onError(e.reason);
+        },
+        [onError]
+    );
 
-    const onLocalError = (e: ErrorEvent) => {
-        onError(e.error);
-    };
+    const onLocalError = React.useCallback(
+        (e: ErrorEvent) => {
+            onError(e.error);
+        },
+        [onError]
+    );
 
     React.useEffect(() => {
         window.addEventListener("unhandledrejection", onUnhandleRejection, true);
@@ -23,7 +29,8 @@ export const ErrorBoundary = React.memo(({children, onError}: Props) => {
             window.removeEventListener("unhandledrejection", onUnhandleRejection, true);
             window.removeEventListener("error", onLocalError, true);
         };
-    }, []);
+    }, [onLocalError, onUnhandleRejection]);
 
-    return <React.Fragment>{children}</React.Fragment>;
+    // eslint-disable-next-line react/jsx-no-useless-fragment -- Type issue
+    return <>{children}</>;
 });

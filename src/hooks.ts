@@ -1,19 +1,22 @@
-import {useHistory as useRouterHistory} from "react-router";
+import {useHistory as useRouterHistory, useLocation} from "react-router";
 import {CoilReactRootState} from "./State";
 import Recoil from "recoil";
 import React from "react";
 import {produce, enableES5} from "immer";
 import type {SetCoilState} from "./type";
 
+type KeepState = "keep-state";
+
 enableES5();
 export const useHistory = <HistoryState>() => {
     const routerHistory = useRouterHistory<Readonly<HistoryState> | undefined>();
+    const location = useLocation();
 
     function pushHistory(url: string): void;
-    function pushHistory(url: string, stateMode: "keep-state"): void;
+    function pushHistory(url: string, stateMode: KeepState): void;
     function pushHistory<T extends object>(url: string, state: T): void;
     function pushHistory<T extends object>(state: T): void;
-    function pushHistory(urlOrState: HistoryState | string, state?: HistoryState | "keep-state") {
+    function pushHistory(urlOrState: HistoryState | string, state?: HistoryState | KeepState) {
         if (typeof urlOrState === "string") {
             const url: string = urlOrState;
             if (state) {

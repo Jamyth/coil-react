@@ -1,9 +1,5 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es5",
-        "outDir": "../dist",
-        "rootDir": "../src",
         "moduleResolution": "node",
         "sourceMap": true,
         "inlineSources": true,
@@ -12,11 +8,9 @@
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "importHelpers": true,
-        "jsx": "react",
-        "lib": ["dom", "es2020"],
         "forceConsistentCasingInFileNames": true,
         "suppressImplicitAnyIndexErrors": true,
-        "downlevelIteration": true
-    },
-    "include": ["../src"]
+        "downlevelIteration": true,
+        "resolveJsonModule": true
+    }
 }

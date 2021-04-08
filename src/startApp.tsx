@@ -7,12 +7,23 @@ import {ErrorBoundary} from "./ErrorBoundary";
 
 interface StartAppOption {
     MainComponent: React.ComponentType<any>;
-    entryElement: HTMLElement;
+    entryElement: HTMLElement | null;
     onError: (e: any) => void;
 }
 
 export function startApp({MainComponent, entryElement, onError}: StartAppOption) {
-    renderApp(MainComponent, entryElement, onError);
+    const _entryElement = validateEntryElement(entryElement);
+    renderApp(MainComponent, _entryElement, onError);
+}
+
+function validateEntryElement(element: HTMLElement | null): HTMLElement {
+    if (!element) {
+        const _element = document.createElement("div");
+        _element.id = "app";
+        document.body.appendChild(_element);
+        return _element;
+    }
+    return element;
 }
 
 function renderApp(MainComponent: React.ComponentType<any>, element: HTMLElement, onError: (e: any) => void) {

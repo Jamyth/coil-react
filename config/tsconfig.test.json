@@ -4,10 +4,9 @@
     "compilerOptions": {
         "lib": ["DOM", "ES2020"],
         "module": "CommonJS",
-        "target": "ES2017",
-        "rootDir": "../script",
-        "noEmit": true,
-        "declaration": false
+        "target": "ESNext",
+        "rootDir": "../",
+        "jsx": "react"
     },
-    "include": ["../script"]
+    "include": ["../src", "../test"]
 }

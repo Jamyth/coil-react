@@ -4,10 +4,10 @@
     "compilerOptions": {
         "lib": ["DOM", "ES2020"],
         "module": "CommonJS",
-        "target": "ES2017",
-        "rootDir": "../script",
-        "noEmit": true,
-        "declaration": false
+        "target": "ES2015",
+        "outDir": "../dist",
+        "rootDir": "../src",
+        "jsx": "react"
     },
-    "include": ["../script"]
+    "include": ["../src"]
 }

@@ -6,4 +6,4 @@ export interface DefaultAction<RouteParam, HistoryState> {
     [method: string]: (...args: any[]) => void;
 }
 
-export type SetCoilState<State> = (stateOrUpdater: (state: State) => void | State | Pick<State, keyof State>) => void;
+export type SetCoilState<State> = (stateOrUpdater: ((state: State) => void) | State | Pick<State, keyof State>) => void;

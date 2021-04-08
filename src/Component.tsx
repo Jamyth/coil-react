@@ -1,29 +1,26 @@
 import React from "react";
 import {useLocation, useParams} from "react-router";
-import {useHistory} from "./hooks";
+import {usePrevious} from "./hooks";
 import {DefaultAction} from "./type";
 
 export function injectLifeCycle<RouteParam = {}, HistoryState = {}>(Component: React.ComponentType<any>, useActions: () => DefaultAction<RouteParam, HistoryState>) {
     return React.memo(() => {
-        const history = useHistory<HistoryState>();
-        const location = useLocation();
+        const location = useLocation<HistoryState>();
         const routeParam = useParams<RouteParam>();
         const {onMount, onRouteMatched} = useActions();
-        const locationRef = React.useRef(history.location);
+        const previousLocation = usePrevious(location);
 
         React.useEffect(() => {
-            onMount();
+            onMount?.();
+            onRouteMatched?.(routeParam, location);
         }, []);
 
         React.useEffect(() => {
-            const prevLocation = locationRef.current;
-            const currentLocation = history.location;
-            if (currentLocation && routeParam && prevLocation !== currentLocation) {
-                onRouteMatched(routeParam, currentLocation);
+            if (previousLocation && location && previousLocation !== location) {
+                onRouteMatched?.(routeParam, location);
             }
-            locationRef.current = history.location;
-        }, [location.pathname]);
+        }, [location]);
 
-        return <Component />;
+        return Component ? <Component /> : null;
     });
 }

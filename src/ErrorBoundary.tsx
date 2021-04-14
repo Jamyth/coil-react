@@ -1,23 +1,26 @@
 import React from "react";
+import type {useErrorHooks} from "./type";
 
 interface Props {
-    onError: (error: any) => void;
+    useError: () => useErrorHooks;
     children: React.ReactNode;
 }
 
-export const ErrorBoundary = React.memo(({children, onError}: Props) => {
+export const ErrorBoundary = React.memo(({children, useError}: Props) => {
+    const callback = useError();
+
     const onUnhandleRejection = React.useCallback(
         (e: PromiseRejectionEvent) => {
-            onError(e.reason);
+            callback(e.reason);
         },
-        [onError]
+        [callback]
     );
 
     const onLocalError = React.useCallback(
         (e: ErrorEvent) => {
-            onError(e.error);
+            callback(e.error);
         },
-        [onError]
+        [callback]
     );
 
     React.useEffect(() => {

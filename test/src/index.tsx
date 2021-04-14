@@ -1,10 +1,7 @@
 import React from "react";
-import {startApp} from "../../src";
+import {startApp} from "coil-react";
 
 const App = React.memo(() => {
-    React.useEffect(() => {
-        throw Error("blah");
-    }, []);
     return <h1>hello World</h1>;
 });
 

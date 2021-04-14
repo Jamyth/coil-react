@@ -5,11 +5,12 @@
   "license": "MIT",
   "devDependencies": {
     "@iamyth/webpack-runner": "1.0.3",
-    "@types/react": "17.0.3",
     "ts-node": "9.1.1",
     "typescript": "4.2.4"
   },
-  "dependencies": {},
+  "dependencies": {
+    "coil-react": "1.0.0"
+  },
   "scripts": {
     "run-script": "ts-node --project ./tsconfig.json",
     "start": "yarn run-script script/start.ts"

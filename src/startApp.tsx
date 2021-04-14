@@ -4,16 +4,17 @@ import Recoil from "recoil";
 import {RecoilDebugObserver} from "./RecoilDebugger";
 import {BrowserRouter} from "react-router-dom";
 import {ErrorBoundary} from "./ErrorBoundary";
+import type {useErrorHooks} from "./type";
 
 interface StartAppOption {
     MainComponent: React.ComponentType<any>;
     entryElement: HTMLElement | null;
-    onError: (e: any) => void;
+    useError: () => useErrorHooks;
 }
 
-export function startApp({MainComponent, entryElement, onError}: StartAppOption) {
+export function startApp({MainComponent, entryElement, useError}: StartAppOption) {
     const _entryElement = validateEntryElement(entryElement);
-    renderApp(MainComponent, _entryElement, onError);
+    renderApp(MainComponent, _entryElement, useError);
 }
 
 function validateEntryElement(element: HTMLElement | null): HTMLElement {
@@ -26,12 +27,12 @@ function validateEntryElement(element: HTMLElement | null): HTMLElement {
     return element;
 }
 
-function renderApp(MainComponent: React.ComponentType<any>, element: HTMLElement, onError: (e: any) => void) {
+function renderApp(MainComponent: React.ComponentType<any>, element: HTMLElement, useError: () => useErrorHooks) {
     ReactDOM.render(
         <Recoil.RecoilRoot>
             <RecoilDebugObserver />
             <BrowserRouter>
-                <ErrorBoundary onError={onError}>
+                <ErrorBoundary useError={useError}>
                     <MainComponent />
                 </ErrorBoundary>
             </BrowserRouter>

@@ -7,7 +7,9 @@
   "author": "Jamyth",
   "license": "MIT",
   "private": false,
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "scripts": {
     "run-script": "ts-node --project config/tsconfig.script.json",
     "build": "yarn run-script script/build.ts"

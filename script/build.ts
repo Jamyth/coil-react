@@ -38,18 +38,6 @@ function compile() {
     return spawn("tsc", ["-p", "config/tsconfig.src.json"], "compile failed, please fix");
 }
 
-// function commit() {
-//     console.info(chalk`{green.bold [task]} {white.bold commit to git}`);
-//     spawn("git", ["add", "."], "cannot add changes to git tree");
-//     return spawn("git", ["commit", "-m", `[SYSTEM]: ${version}: build package`], "cannot commit changes");
-// }
-
-// function push() {
-//     console.info(chalk`{green.bold [task]} {white.bold push to github}`);
-//     spawn("git", ["pull", "--rebase", "--autostash"], "cannot pull changes from upstream");
-//     return spawn("git", ["push", "-u", "origin", "master"], "cannot push to github");
-// }
-
 function build() {
     const isFastMode = yargs.argv.mode === "fast";
 
@@ -60,8 +48,6 @@ function build() {
 
     cleanup();
     compile();
-    // commit();
-    // push();
 }
 
 build();

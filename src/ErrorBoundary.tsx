@@ -1,5 +1,7 @@
 import React from "react";
 import type {useErrorHooks} from "./type";
+import {CoilReactRootState} from "./State";
+import {useCoilState} from "./hooks";
 
 interface Props {
     useError: () => useErrorHooks;
@@ -7,20 +9,27 @@ interface Props {
 }
 
 export const ErrorBoundary = React.memo(({children, useError}: Props) => {
+    const {setState} = useCoilState(CoilReactRootState);
     const callback = useError();
+
+    const cleanupAllLoading = React.useCallback(() => {
+        setState((state) => (state.loading = {default: false}));
+    }, [setState]);
 
     const onUnhandleRejection = React.useCallback(
         (e: PromiseRejectionEvent) => {
             callback(e.reason);
+            cleanupAllLoading();
         },
-        [callback]
+        [callback, cleanupAllLoading]
     );
 
     const onLocalError = React.useCallback(
         (e: ErrorEvent) => {
             callback(e.error);
+            cleanupAllLoading();
         },
-        [callback]
+        [callback, cleanupAllLoading]
     );
 
     React.useEffect(() => {

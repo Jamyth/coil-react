@@ -1,6 +1,6 @@
 {
   "name": "coil-react",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A React Framework combined react-router, recoil, react",
   "main": "./dist/index.js",
   "repository": "https://github.com/Jamyth/coil-react.git",

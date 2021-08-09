@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Recoil from "recoil";
 import {RecoilDebugObserver} from "./RecoilDebugger";
+import {RecoilLoader} from "./RecoilLoader";
 import {BrowserRouter} from "react-router-dom";
 import {ErrorBoundary} from "./ErrorBoundary";
 import type {useErrorHooks} from "./type";
@@ -31,6 +32,7 @@ function renderApp(MainComponent: React.ComponentType<any>, element: HTMLElement
     ReactDOM.render(
         <Recoil.RecoilRoot>
             <RecoilDebugObserver />
+            <RecoilLoader />
             <BrowserRouter>
                 <ErrorBoundary useError={useError}>
                     <MainComponent />

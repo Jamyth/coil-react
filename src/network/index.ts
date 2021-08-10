@@ -13,6 +13,26 @@ export type PathParams<T extends string> = string extends T
   : object;
 /* eslint-enable */
 
+const APPLICATION_JSON = "application/json";
+
+function parseWithDate(data: string) {
+    const ISO_DATE_FORMAT = /^\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d(\.\d+)?(Z|[+-][01]\d:[0-5]\d)$/;
+    return JSON.parse(data, (key: any, value: any) => {
+        if (typeof value === "string" && ISO_DATE_FORMAT.test(value)) {
+            return new Date(value);
+        }
+        return value;
+    });
+}
+
+axios.defaults.transformResponse = (data, headers) => {
+    const contentType = headers["content-type"];
+    if (contentType && contentType.startsWith(APPLICATION_JSON)) {
+        return parseWithDate(data);
+    }
+    return data;
+};
+
 axios.interceptors.response.use(
     (response) => response,
     // eslint-disable-next-line sonarjs/cognitive-complexity -- well commented
@@ -57,8 +77,8 @@ export async function ajax<Request, Response, Path extends string>(method: Metho
     }
 
     config.headers = {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        "Content-Type": APPLICATION_JSON,
+        Accept: APPLICATION_JSON,
     };
 
     const response = await axios.request(config);

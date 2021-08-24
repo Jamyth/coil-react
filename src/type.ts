@@ -1,5 +1,4 @@
 import type {Location} from "history";
-import type {APIException, NetworkConnectionException, JavaScriptException} from "./network/Exception";
 
 export interface DefaultAction<RouteParam, HistoryState> {
     onMount?: () => void;
@@ -8,7 +7,3 @@ export interface DefaultAction<RouteParam, HistoryState> {
 }
 
 export type SetCoilState<State> = (stateOrUpdater: ((state: State) => void) | State | Pick<State, keyof State>) => void;
-
-export interface useErrorHooks {
-    (error: any | APIException | NetworkConnectionException | JavaScriptException): void;
-}

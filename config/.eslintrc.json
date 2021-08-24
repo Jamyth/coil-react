@@ -1,4 +1,10 @@
 {
-    "ignorePatterns": ["**/node_modules/**", "**/script/**", "**/dist/**"],
-    "extends": ["iamyth/preset/react"]
+    "ignorePatterns": [
+        "**/node_modules/**",
+        "**/script/**",
+        "**/dist/**"
+    ],
+    "extends": [
+        "iamyth/preset/react"
+    ]
 }

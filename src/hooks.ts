@@ -1,9 +1,13 @@
 import {useHistory as useRouterHistory, useLocation} from "react-router";
-import {CoilReactRootState} from "./State";
+import {CoilReactRootState} from "./state/RootState";
 import Recoil from "recoil";
 import React from "react";
 import {produce, enableES5} from "immer";
 import type {SetCoilState} from "./type";
+import {captureError} from "./util/error-util";
+import {ErrorState} from "./state/ErrorState";
+import type {Exception} from "./util/Exception";
+import {set} from "./RecoilLoader";
 
 type KeepState = "keep-state";
 
@@ -58,10 +62,10 @@ export const useLoadingAction = () => {
             },
         }));
     };
-    return {
+    return actionHandlers({
         start,
         end,
-    };
+    });
 };
 
 export const useObjectKeyAction = <T extends object, K extends keyof T>(action: (arg: T) => void, key: K) => {
@@ -116,4 +120,55 @@ export function usePrevious<T>(value: T) {
         ref.current = value;
     }, [value]);
     return ref.current;
+}
+
+export function actionHandlers<T>(actions: T): T {
+    const entries = Object.entries(actions);
+
+    const functionWrapper =
+        <Params extends any[]>(action: (...args: Params) => void) =>
+        async (...params: Params) => {
+            try {
+                await action(...params);
+            } catch (error) {
+                captureError(error);
+            }
+        };
+
+    const wrappedActions = entries.map(([key, action]) => {
+        return {
+            [key]: functionWrapper(action),
+        };
+    });
+
+    return wrappedActions.reduce((acc, action) => Object.assign(acc, action), {}) as unknown as T;
+}
+
+export function useError() {
+    return Recoil.useRecoilValue(ErrorState);
+}
+
+export function useErrorAction() {
+    const setState = Recoil.useSetRecoilState(ErrorState);
+
+    const setError = (e: Exception | null) => {
+        setState(e);
+    };
+
+    const clearError = () => {
+        setError(null);
+    };
+
+    return actionHandlers({
+        setError,
+        clearError,
+    });
+}
+
+export function clearLoading() {
+    set(CoilReactRootState, {
+        loading: {
+            default: false,
+        },
+    });
 }

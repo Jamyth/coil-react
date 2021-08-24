@@ -1,48 +1,29 @@
 import React from "react";
-import type {useErrorHooks} from "./type";
-import {CoilReactRootState} from "./State";
-import {useCoilState} from "./hooks";
+import {captureError} from "./util/error-util";
+import type {Exception} from "./util/Exception";
 
 interface Props {
-    useError: () => useErrorHooks;
-    children: React.ReactNode;
+    render: (exception: Exception) => React.ReactElement | null;
 }
 
-export const ErrorBoundary = React.memo(({children, useError}: Props) => {
-    const {setState} = useCoilState(CoilReactRootState);
-    const callback = useError();
+interface State {
+    exception: Exception | null;
+}
 
-    const cleanupAllLoading = React.useCallback(() => {
-        setState((state) => (state.loading = {default: false}));
-    }, [setState]);
+export class ErrorBoundary extends React.PureComponent<Props, State> {
+    static defaultProps: Pick<Props, "render"> = {render: () => null};
 
-    const onUnhandleRejection = React.useCallback(
-        (e: PromiseRejectionEvent) => {
-            callback(e.reason);
-            cleanupAllLoading();
-        },
-        [callback, cleanupAllLoading]
-    );
+    constructor(props: Props) {
+        super(props);
+        this.state = {exception: null};
+    }
 
-    const onLocalError = React.useCallback(
-        (e: ErrorEvent) => {
-            callback(e.error);
-            cleanupAllLoading();
-        },
-        [callback, cleanupAllLoading]
-    );
+    override componentDidCatch(error: Error) {
+        const exception = captureError(error);
+        this.setState({exception});
+    }
 
-    React.useEffect(() => {
-        window.addEventListener("unhandledrejection", onUnhandleRejection, true);
-        // TODO: Check if the true here is required.
-        window.addEventListener("error", onLocalError, true);
-
-        return () => {
-            window.removeEventListener("unhandledrejection", onUnhandleRejection, true);
-            window.removeEventListener("error", onLocalError, true);
-        };
-    }, [onLocalError, onUnhandleRejection]);
-
-    // eslint-disable-next-line react/jsx-no-useless-fragment -- Type issue
-    return <>{children}</>;
-});
+    render() {
+        return this.state.exception ? this.props.render(this.state.exception) : this.props.children || null;
+    }
+}

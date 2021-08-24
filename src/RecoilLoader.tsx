@@ -13,7 +13,7 @@ export const RecoilLoader = React.memo(() => {
     Recoil.useRecoilCallback(({set: recoilSet}) => {
         set = recoilSet;
         return () => {};
-    });
+    })();
 
     return null;
 });

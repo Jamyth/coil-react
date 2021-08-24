@@ -39,7 +39,7 @@ function compile() {
 }
 
 function build() {
-    const isFastMode = yargs.argv.mode === "fast";
+    const isFastMode = "mode" in yargs.argv && yargs.argv.mode === "fast";
 
     if (!isFastMode) {
         checkCodeStyle();

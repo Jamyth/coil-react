@@ -38,7 +38,7 @@ export const useHistory = <HistoryState>() => {
 };
 
 export const useLoadingState = (key: string = "default") => {
-    const state = Recoil.useRecoilValue(CoilReactRootState);
+    const state = Recoil.useRecoilValue(CoilReactRootState).loading;
     return state[key] || false;
 };
 
@@ -62,10 +62,10 @@ export const useLoadingAction = () => {
             },
         }));
     };
-    return actionHandlers({
+    return {
         start,
         end,
-    });
+    };
 };
 
 export const useObjectKeyAction = <T extends object, K extends keyof T>(action: (arg: T) => void, key: K) => {

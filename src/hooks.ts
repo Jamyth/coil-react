@@ -38,43 +38,8 @@ export const useHistory = <HistoryState>() => {
 };
 
 export const useLoadingState = (key: string = "default") => {
-    const state = Recoil.useRecoilValue(CoilReactRootState).loading;
+    const state = Recoil.useRecoilValue(CoilReactRootState);
     return state[key] || false;
-};
-
-export const useLoadingAction = () => {
-    const setState = Recoil.useSetRecoilState(CoilReactRootState);
-    const start = (key: string = "default") => {
-        setState((state) => ({
-            ...state,
-            loading: {
-                ...state.loading,
-                [key]: true,
-            },
-        }));
-    };
-    const end = (key: string = "default") => {
-        setState((state) => ({
-            ...state,
-            loading: {
-                ...state.loading,
-                [key]: false,
-            },
-        }));
-    };
-    return {
-        start,
-        end,
-    };
-};
-
-export const useObjectKeyAction = <T extends object, K extends keyof T>(action: (arg: T) => void, key: K) => {
-    return React.useCallback(
-        (value: T[K]) => {
-            action({[key]: value} as T);
-        },
-        [action, key]
-    );
 };
 
 export const useCoilState = <State>(
@@ -112,6 +77,29 @@ export const useCoilState = <State>(
         getState,
         setState: setCoilState,
     };
+};
+
+export const useLoadingAction = () => {
+    const {setState} = useCoilState(CoilReactRootState);
+    const start = (key: string = "default") => {
+        setState((state) => (state.loading[key] = true));
+    };
+    const end = (key: string = "default") => {
+        setState((state) => (state.loading[key] = false));
+    };
+    return actionHandlers({
+        start,
+        end,
+    });
+};
+
+export const useObjectKeyAction = <T extends object, K extends keyof T>(action: (arg: T) => void, key: K) => {
+    return React.useCallback(
+        (value: T[K]) => {
+            action({[key]: value} as T);
+        },
+        [action, key]
+    );
 };
 
 export function usePrevious<T>(value: T) {

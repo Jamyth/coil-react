@@ -37,11 +37,6 @@ export const useHistory = <HistoryState>() => {
     return Object.assign(routerHistory, {pushHistory});
 };
 
-export const useLoadingState = (key: string = "default") => {
-    const state = Recoil.useRecoilValue(CoilReactRootState);
-    return state[key] || false;
-};
-
 export const useCoilState = <State>(
     recoilState: Recoil.RecoilState<State>
 ): {
@@ -77,6 +72,11 @@ export const useCoilState = <State>(
         getState,
         setState: setCoilState,
     };
+};
+
+export const useLoadingState = (key: string = "default") => {
+    const {getState} = useCoilState(CoilReactRootState);
+    return getState().loading[key] || false;
 };
 
 export const useLoadingAction = () => {

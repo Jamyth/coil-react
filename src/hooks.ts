@@ -6,6 +6,7 @@ import {produce, enableES5} from "immer";
 import type {SetCoilState} from "./type";
 import {captureError} from "./util/error-util";
 import {ErrorState} from "./state/ErrorState";
+import {NavigationPreventState} from "./state/NavigationPreventState";
 import type {Exception} from "./util/Exception";
 import {set} from "./RecoilLoader";
 
@@ -158,5 +159,36 @@ export function clearLoading() {
         loading: {
             default: false,
         },
+    });
+}
+
+export function useLoading<Args extends any[], R>(key: string | "default", callback: (...args: Args) => Promise<R>): (...args: Args) => Promise<R> {
+    const timer = useLoadingAction();
+    return async (...args) => {
+        try {
+            timer.start(key);
+            return await callback(...args);
+        } finally {
+            timer.end(key);
+        }
+    };
+}
+
+export function useNavigationPreventState() {
+    const {getState} = useCoilState(NavigationPreventState);
+    return {...getState()};
+}
+
+export function useNavigationPreventAction() {
+    const {setState} = useCoilState(NavigationPreventState);
+
+    const setNavigationPrevent = (isPrevented: boolean) => {
+        setState((state) => {
+            state.isPrevented = isPrevented;
+        });
+    };
+
+    return actionHandlers({
+        setNavigationPrevent,
     });
 }

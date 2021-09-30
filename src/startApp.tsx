@@ -7,11 +7,15 @@ import {BrowserRouter} from "react-router-dom";
 import {ErrorBoundary} from "./ErrorBoundary";
 import type {Exception} from "./util/Exception";
 import {captureError} from "./util/error-util";
+import {NavigationGuard} from "./components/NavigationGuard";
 
 interface StartAppOption {
     MainComponent: React.ComponentType<any>;
     entryElement: HTMLElement | null;
     errorHandler?: (error: Exception) => void;
+    browserConfig?: {
+        navigationPreventMessage?: string;
+    };
 }
 
 interface CoilReactApp {
@@ -22,9 +26,9 @@ export const app: CoilReactApp = {
     errorHandler: () => {},
 };
 
-export function startApp({MainComponent, entryElement, errorHandler}: StartAppOption) {
+export function startApp({MainComponent, entryElement, errorHandler, browserConfig}: StartAppOption) {
     const _entryElement = validateEntryElement(entryElement);
-    renderApp(MainComponent, _entryElement);
+    renderApp(MainComponent, _entryElement, browserConfig?.navigationPreventMessage ?? "Are you sure to leave current page?");
     setGlobalErrorHandler(errorHandler);
 }
 
@@ -42,12 +46,13 @@ function validateEntryElement(element: HTMLElement | null): HTMLElement {
     return element;
 }
 
-function renderApp(MainComponent: React.ComponentType<any>, element: HTMLElement) {
+function renderApp(MainComponent: React.ComponentType<any>, element: HTMLElement, navigationPreventMessage: string) {
     ReactDOM.render(
         <Recoil.RecoilRoot>
             <RecoilDebugObserver />
             <RecoilLoader />
             <BrowserRouter>
+                <NavigationGuard preventMessage={navigationPreventMessage} />
                 <ErrorBoundary>
                     <MainComponent />
                 </ErrorBoundary>

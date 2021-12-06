@@ -11,7 +11,7 @@ export const async = <T, K extends ReactComponentTypeOf<T>>(resolve: () => Promi
         const load = async () => {
             try {
                 const module = await resolve();
-                setComponent(() => module[key]);
+                setComponent(() => module[key] as any);
             } catch (err) {
                 console.error(err);
                 console.error(`Cannot load module ${key}`);
@@ -23,5 +23,5 @@ export const async = <T, K extends ReactComponentTypeOf<T>>(resolve: () => Promi
         }, []);
 
         return Component ? <Component {...props} /> : loadingComponent;
-    }) as T[K];
+    }) as unknown as T[K];
 };

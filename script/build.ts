@@ -1,8 +1,6 @@
 import chalk from "chalk";
 import {spawnSync} from "child_process";
 import yargs from "yargs";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// const {version} = require("../package.json");
 
 function spawn(command: string, args: string[], errorMessage: string) {
     const isWindows = process.platform === "win32";

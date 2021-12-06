@@ -26,7 +26,7 @@ function parseWithDate(data: string) {
 }
 
 axios.defaults.transformResponse = (data, headers) => {
-    const contentType = headers["content-type"];
+    const contentType = headers?.["content-type"];
     if (contentType && contentType.startsWith(APPLICATION_JSON)) {
         return parseWithDate(data);
     }

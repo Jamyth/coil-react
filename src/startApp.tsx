@@ -7,13 +7,16 @@ import {BrowserRouter} from "react-router-dom";
 import {ErrorBoundary} from "./ErrorBoundary";
 import type {Exception} from "./util/Exception";
 import {captureError} from "./util/error-util";
-import {NavigationGuard} from "./components/NavigationGuard";
+// import {NavigationGuard} from "./components/NavigationGuard";
 
 interface StartAppOption {
     MainComponent: React.ComponentType<any>;
     entryElement: HTMLElement | null;
     errorHandler?: (error: Exception) => void;
     browserConfig?: {
+        /**
+         * @deprecated -- react-router v6 temporary not support
+         */
         navigationPreventMessage?: string;
     };
 }
@@ -52,7 +55,7 @@ function renderApp(MainComponent: React.ComponentType<any>, element: HTMLElement
             <RecoilDebugObserver />
             <RecoilLoader />
             <BrowserRouter>
-                <NavigationGuard preventMessage={navigationPreventMessage} />
+                {/* <NavigationGuard preventMessage={navigationPreventMessage} /> */}
                 <ErrorBoundary>
                     <MainComponent />
                 </ErrorBoundary>

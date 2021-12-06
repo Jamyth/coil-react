@@ -1,4 +1,4 @@
-import {useHistory as useRouterHistory, useLocation} from "react-router";
+import {useNavigate as useRouterHistory, useLocation} from "react-router";
 import {CoilReactRootState} from "./state/RootState";
 import Recoil from "recoil";
 import React from "react";
@@ -14,7 +14,7 @@ type KeepState = "keep-state";
 
 enableES5();
 export const useHistory = <HistoryState>() => {
-    const routerHistory = useRouterHistory<Readonly<HistoryState> | undefined>();
+    const navigate = useRouterHistory();
     const location = useLocation();
 
     function pushHistory(url: string): void;
@@ -25,17 +25,17 @@ export const useHistory = <HistoryState>() => {
         if (typeof urlOrState === "string") {
             const url: string = urlOrState;
             if (state) {
-                routerHistory.push(url, state === "keep-state" ? routerHistory.location.state : state);
+                navigate(url, state === "keep-state" ? location.state : state);
             } else {
-                routerHistory.push(url);
+                navigate(url);
             }
         } else {
             const currentURL = location.pathname + location.search;
             const state: HistoryState = urlOrState;
-            routerHistory.push(currentURL, state);
+            navigate(currentURL, state);
         }
     }
-    return Object.assign(routerHistory, {pushHistory});
+    return {pushHistory};
 };
 
 export const useCoilState = <State>(
@@ -174,11 +174,17 @@ export function useLoading<Args extends any[], R>(key: string | "default", callb
     };
 }
 
+/**
+ * @deprecated -- react-router v6 issue
+ */
 export function useNavigationPreventState() {
     const {getState} = useCoilState(NavigationPreventState);
     return {...getState()};
 }
 
+/**
+ * @deprecated -- react-router v6 issue
+ */
 export function useNavigationPreventAction() {
     const {setState} = useCoilState(NavigationPreventState);
 

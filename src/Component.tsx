@@ -5,8 +5,9 @@ import type {DefaultAction} from "./type";
 
 export function injectLifeCycle<RouteParam = object, HistoryState = object>(Component: React.ComponentType<any>, useActions: () => DefaultAction<RouteParam, HistoryState>) {
     return React.memo(() => {
-        const location = useLocation<HistoryState>();
-        const routeParam = useParams<RouteParam>();
+        const location = useLocation();
+        const routeParam = useParams() as unknown as RouteParam;
+        const {id} = useParams<"id">();
         const {onMount, onRouteMatched} = useActions();
         const previousLocation = usePrevious(location);
         const navigationPreventActions = useNavigationPreventAction();

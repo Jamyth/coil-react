@@ -1,4 +1,8 @@
-import type {Location} from "history";
+import type {Location as HistoryLocation} from "history";
+
+type Location<T> = Omit<HistoryLocation, "state"> & {
+    state: T | undefined;
+};
 
 export interface DefaultAction<RouteParam, HistoryState> {
     onMount?: () => void;
